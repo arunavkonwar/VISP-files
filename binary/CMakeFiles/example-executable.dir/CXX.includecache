@@ -9,6 +9,14 @@
 /home/arunav/code-new/source/example.cpp
 iostream
 -
+math.h
+-
+iomanip
+-
+fstream
+-
+ctime
+-
 visp/vpDebug.h
 -
 visp/vpImage.h
@@ -18,6 +26,8 @@ visp/vpImageIo.h
 visp/vpImageSimulator.h
 -
 visp/vpDisplayX.h
+-
+string
 -
 
 /usr/include/opencv/cv.h
