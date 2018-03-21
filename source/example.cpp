@@ -22,7 +22,7 @@ int main()
   clock_t begin = clock();
   int i,j;
   //vpImage<unsigned char> I1(300,400,0);
-  vpImage<unsigned char> I2(300,400,0); //<unsigned char> for greyscale images
+  vpImage<unsigned char> I2(224,224,0); //<unsigned char> for greyscale images
   //vpImage<vpRGBa> I2(300,400,0); // <vpRGBa> for color images
   vpImage<vpRGBa> Iimage(800,1200);
   
@@ -99,7 +99,7 @@ int main()
     long k=0;
   // On positionne une camera c2 à la position c2Tw //Positioning a camera c2 at position c2Tw
   for(float i=-0.2;i<=0.2;i=i+0.01){
-    for(float j=-0.1;j<=0.1;j=j+0.01){
+    for(float j=-0.1;j<=0.1;j=j+0.001){
       vpHomogeneousMatrix c2Tw(i,j,1,
         vpMath::rad(0),vpMath::rad(0),0) ; //0.1,0,2, vpMath::rad(0),vpMath::rad(0),0) ;
         //on simule l'image vue par c2 //we simulate the image seen by c2
@@ -123,7 +123,7 @@ int main()
         k++;
         string lolk = to_string(k);
         //vpImageIo::write(I2,k+".jpg") ; //write to filename
-        vpImageIo::write(I2,lolk + ".jpg");
+        vpImageIo::write(I2,"generated_images/"+lolk + ".jpg");
         vpHomogeneousMatrix  c2Tc1 = c2Tw * c1Tw.inverse() ;
         vpPoseVector deltaT(c2Tc1) ; //  vector 6 (t,theta U)
         //cout << vpPoseVector << endl;
