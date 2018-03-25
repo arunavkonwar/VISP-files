@@ -13,6 +13,7 @@ CMakeFiles/example-executable.dir/example.cpp.o
  /usr/local/include/visp/vpImageSimulator.h
  /usr/local/include/visp3/core/vpArray2D.h
  /usr/local/include/visp3/core/vpCameraParameters.h
+ /usr/local/include/visp3/core/vpCircle.h
  /usr/local/include/visp3/core/vpColVector.h
  /usr/local/include/visp3/core/vpColor.h
  /usr/local/include/visp3/core/vpConfig.h
@@ -20,6 +21,7 @@ CMakeFiles/example-executable.dir/example.cpp.o
  /usr/local/include/visp3/core/vpDisplay.h
  /usr/local/include/visp3/core/vpDisplayException.h
  /usr/local/include/visp3/core/vpException.h
+ /usr/local/include/visp3/core/vpExponentialMap.h
  /usr/local/include/visp3/core/vpForceTwistMatrix.h
  /usr/local/include/visp3/core/vpForwardProjection.h
  /usr/local/include/visp3/core/vpHomogeneousMatrix.h
@@ -27,8 +29,10 @@ CMakeFiles/example-executable.dir/example.cpp.o
  /usr/local/include/visp3/core/vpImageConvert.h
  /usr/local/include/visp3/core/vpImageException.h
  /usr/local/include/visp3/core/vpImagePoint.h
+ /usr/local/include/visp3/core/vpImageTools.h
  /usr/local/include/visp3/core/vpMath.h
  /usr/local/include/visp3/core/vpMatrix.h
+ /usr/local/include/visp3/core/vpMeterPixelConversion.h
  /usr/local/include/visp3/core/vpMouseButton.h
  /usr/local/include/visp3/core/vpPoint.h
  /usr/local/include/visp3/core/vpPoseVector.h
@@ -55,6 +59,9 @@ CMakeFiles/example-executable.dir/example.cpp.o
  /usr/local/include/visp3/gui/vpDisplayWin32.h
  /usr/local/include/visp3/gui/vpDisplayX.h
  /usr/local/include/visp3/gui/vpGDIRenderer.h
+ /usr/local/include/visp3/gui/vpPlot.h
+ /usr/local/include/visp3/gui/vpPlotCurve.h
+ /usr/local/include/visp3/gui/vpPlotGraph.h
  /usr/local/include/visp3/gui/vpWin32Renderer.h
  /usr/local/include/visp3/gui/vpWin32Window.h
  /usr/local/include/visp3/io/vpImageIo.h

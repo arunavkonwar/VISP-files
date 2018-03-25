@@ -12,18 +12,86 @@
 
 #include <string>     // std::string, std::to_string
 
+#include <visp3/gui/vpPlot.h>
+#include <visp3/core/vpMeterPixelConversion.h>
+#include <visp3/core/vpCameraParameters.h>
+#include <visp3/core/vpImageTools.h>
 
+#include <visp3/core/vpExponentialMap.h>
 using namespace std ;
 
+void
+computeError3D(vpHomogeneousMatrix &cdTc, vpColVector &cdrc)
+{
+    vpPoseVector _cdrc(cdTc) ;
+    cdrc = (vpColVector)_cdrc ;
+}
+
+void
+computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
+{
+
+    vpRotationMatrix cdRc(cdTc) ;
+    vpThetaUVector tu(cdTc) ;
+
+    vpColVector u ;
+    double theta ;
+
+    tu.extract(theta,u);
+    vpMatrix Lw(3,3) ;
+    Lw[0][0] = 1 ;
+    Lw[1][1] = 1 ;
+    Lw[2][2] = 1 ;
+
+    vpMatrix sku = vpColVector::skew(u) ;
+    Lw += (theta/2.0)*sku ;
+    Lw += (1-vpMath::sinc(theta)/vpMath::sqr(vpMath::sinc(theta/2.0)))*sku*sku ;
+
+    Lx.resize(6,6) ;
+    Lx = 0 ;
+    for (int i=0 ; i < 3 ; i++)   // bloc translation
+        for (int j=0 ; j < 3 ; j++)
+        {
+            Lx[i][j] = cdRc[i][j] ;
+            Lx[i+3][j+3] = Lw[i][j] ;
+        }
+
+
+}
 
 
 int main()
 {
-  clock_t begin = clock();
+
+
+    vpTRACE("begin" ) ;
+
+    vpPlot plot(4, 700, 700, 100, 200, "Curves...");
+
+
+    char title[40];
+    strncpy( title, "||e||", 40 );
+    plot.setTitle(0,title);
+    plot.initGraph(0,1);
+
+    strncpy( title, "x-xd", 40 );
+    plot.setTitle(1, title);
+    plot.initGraph(1,6);
+
+    strncpy( title, "camera velocity", 40 );
+    plot.setTitle(2, title);
+    plot.initGraph(2,6);
+
+
+    strncpy( title, "Point position", 40 );
+    plot.setTitle(3, title);
+    plot.initGraph(3,6);
+
+
+
   int i,j;
-  //vpImage<unsigned char> I1(300,400,0);
-  vpImage<unsigned char> I2(224,224,0); //<unsigned char> for greyscale images
-  //vpImage<vpRGBa> I2(300,400,0); // <vpRGBa> for color images
+  vpImage<unsigned char> I(224,224,0); //<unsigned char> for greyscale images
+  vpImage<unsigned char> Id(224,224,0); //<unsigned char> for greyscale images
   vpImage<vpRGBa> Iimage(800,1200);
   
  
@@ -67,6 +135,8 @@ int main()
 
 
   vpImageSimulator sim;
+  sim.setInterpolationType(vpImageSimulator::BILINEAR_INTERPOLATION);
+
   sim.init(Iimage, X);
 
   // On définit une camera avec certain parametre u0 = 200, v0 = 150; px = py = 800
@@ -94,8 +164,116 @@ int main()
   cout << "Image I1g " <<endl ;
   cout << c1Tw << endl ;
 */
-   vpHomogeneousMatrix c1Tw(0,0,1,
-        vpMath::rad(0),vpMath::rad(0),0) ; //0.1,0,2, vpMath::rad(0),vpMath::rad(0),0) ;
+
+    //desired position
+   vpHomogeneousMatrix cdTw(0,0,1, vpMath::rad(0),vpMath::rad(0),0) ;
+   sim.setCameraPosition(cdTw);
+   sim.setCleanPreviousImage(true, vpColor::black); //set color, default is black
+   sim.getImage(Id,cam);
+
+
+   //current position
+
+  // vpHomogeneousMatrix cTw(0.1,0,1, vpMath::rad(0),vpMath::rad(0),0) ;
+   vpHomogeneousMatrix cTw(0.05,-0.02,1, vpMath::rad(10),vpMath::rad(-5),vpMath::rad(10)) ;
+   sim.setCameraPosition(cTw);
+   sim.setCleanPreviousImage(true, vpColor::black); //set color, default is black
+   // on recupère l'image I2 //we recover the image I2
+   sim.getImage(I,cam);
+
+   vpImage<unsigned char> Idiff;
+   Idiff = I;
+   vpImageTools::imageDifference(I, Id, Idiff);
+
+   // On affiche l'image I1 //We display image Id
+   vpDisplayX dd(Idiff,10,10,"I-I*") ;
+   vpDisplay::display(Idiff) ;
+   vpDisplay::flush(Idiff) ;
+
+
+
+   // Display current image
+   vpDisplayX d(I,10,400,"I") ;
+   vpDisplay::display(I) ;
+   vpDisplay::flush(I) ;
+
+
+
+   vpColVector e(6) ; //
+   e[0] = 1 ; // moche mais sert juste a entrer dans la boucle...
+
+   vpMatrix Lx ;
+
+   vpColVector v ;
+   double lambda = 0.1 ;
+   int iter = 0 ;
+   while (fabs(e.sumSquare()) > 1e-8)
+   {
+
+       sim.setCameraPosition(cTw);
+       sim.setCleanPreviousImage(true, vpColor::black); //set color, default is black
+       // on recupère l'image I2 //we recover the image I2
+       sim.getImage(I,cam);
+
+       vpDisplay::display(I) ;
+       vpDisplay::flush(I) ;
+
+       vpImageTools::imageDifference(I, Id, Idiff);
+       // On affiche l'image I1 //We display image Id
+
+       vpDisplay::display(Idiff) ;
+       vpDisplay::flush(Idiff) ;
+
+
+      // Here cdTc is obtain thanks to a simulation process
+       vpHomogeneousMatrix cdTc ;
+       cdTc = cdTw*cTw.inverse() ;
+
+       // the two previous line should be be replace by something like
+       // cdTc = CNN(I) ;
+
+
+       // Calcul de l'erreur
+       computeError3D(cdTc, e) ;
+       // Calcul de la matrice d'interaction
+       computeInteractionMatrix3D(cdTc, Lx) ;
+       //        Calcul de la loi de commande
+       vpMatrix Lp ;
+       Lp = Lx.pseudoInverse() ;
+
+       v = - lambda * Lp * e ;
+
+       // Mis à jour de la position de la camera
+       cTw = vpExponentialMap::direct(v).inverse()* cTw ;
+
+       cout << "iter "<< iter <<" : "<< e.t() << endl ;
+
+       iter++ ;
+
+   //mis a jour de courbes
+       vpPoseVector crw(cTw) ;
+       plot.plot(0,0,iter, e.sumSquare()) ;
+       plot.plot(1,iter, e) ;
+       plot.plot(2,iter, v) ;
+       plot.plot(3,iter,crw) ;
+
+
+   }
+
+
+   // sauvegarde des courbes
+       plot.saveData(0,"e.txt","#");
+       plot.saveData(1,"error.txt","#");
+       plot.saveData(2,"v.txt","#");
+       plot.saveData(3,"p.txt","#");
+
+       int a ; cin >> a ;
+
+
+
+   /*
+
+
     long k=0;
   // On positionne une camera c2 à la position c2Tw //Positioning a camera c2 at position c2Tw
   for(float i=-0.2;i<=0.2;i=i+0.01){
@@ -140,7 +318,7 @@ int main()
 
     }  
   }
-  
+  */
  
  /*
 
@@ -177,9 +355,5 @@ int main()
  */ 
 
 
-  
-  clock_t end = clock();
-  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-  cout<<elapsed_secs<<endl;
   return 0;
 }
