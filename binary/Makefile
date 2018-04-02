@@ -123,32 +123,32 @@ example-executable/fast:
 	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/build
 .PHONY : example-executable/fast
 
-lel.o: lel.cpp.o
+example.o: example.cpp.o
 
-.PHONY : lel.o
+.PHONY : example.o
 
 # target to build an object file
-lel.cpp.o:
-	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/lel.cpp.o
-.PHONY : lel.cpp.o
+example.cpp.o:
+	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/example.cpp.o
+.PHONY : example.cpp.o
 
-lel.i: lel.cpp.i
+example.i: example.cpp.i
 
-.PHONY : lel.i
+.PHONY : example.i
 
 # target to preprocess a source file
-lel.cpp.i:
-	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/lel.cpp.i
-.PHONY : lel.cpp.i
+example.cpp.i:
+	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/example.cpp.i
+.PHONY : example.cpp.i
 
-lel.s: lel.cpp.s
+example.s: example.cpp.s
 
-.PHONY : lel.s
+.PHONY : example.s
 
 # target to generate assembly for a file
-lel.cpp.s:
-	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/lel.cpp.s
-.PHONY : lel.cpp.s
+example.cpp.s:
+	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/example.cpp.s
+.PHONY : example.cpp.s
 
 # Help Target
 help:
@@ -159,9 +159,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... example-executable"
 	@echo "... rebuild_cache"
-	@echo "... lel.o"
-	@echo "... lel.i"
-	@echo "... lel.s"
+	@echo "... example.o"
+	@echo "... example.i"
+	@echo "... example.s"
 .PHONY : help
 
 
