@@ -1,3 +1,0 @@
-/home/arunav/code-new/source/CMakeFiles/edit_cache.dir
-/home/arunav/code-new/source/CMakeFiles/rebuild_cache.dir
-/home/arunav/code-new/source/CMakeFiles/example-executable.dir

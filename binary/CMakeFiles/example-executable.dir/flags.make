@@ -6,5 +6,5 @@ CXX_FLAGS = -std=c++0x
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/usr/local/include -isystem /usr/include/opencv -isystem /usr/include/eigen3 -isystem /usr/include/libxml2 -isystem /usr/include/libusb-1.0 -isystem /usr/include/OGRE -isystem /usr/include/ois 
+CXX_INCLUDES = -I/usr/local/include -isystem /usr/include/opencv -isystem /usr/include/eigen3 -I/usr/include/python2.7 
 

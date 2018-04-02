@@ -18,18 +18,8 @@
 #include <visp3/core/vpImageTools.h>
 
 #include <visp3/core/vpExponentialMap.h>
-//#include <Python.h>
+#include <Python.h>
 #include <stdlib.h>
-
-//new header files
-#include <stdio.h>
-#include <python2.7/Python.h>
-
-//opencv
-
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
 
 
 using namespace std ;
@@ -74,11 +64,8 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
 }
 
 
-int main()
-{   
-    FILE* file;
-    int argc;
-    char * argv[3];
+int main(int argc, char *argv[])
+{
 
 
     vpTRACE("begin" ) ;
@@ -105,8 +92,7 @@ int main()
     plot.initGraph(3,6);
 
 
-  cv::Mat mat_img; //initialize MAT variables
-
+  MAT A,C; //initialize MAT variables
   int i,j;
   vpImage<unsigned char> I(224,224,0); //<unsigned char> for greyscale images
   vpImage<unsigned char> Id(224,224,0); //<unsigned char> for greyscale images
@@ -261,20 +247,12 @@ int main()
 
 */
 
-      //Py_SetProgramName(argv[0]);  /* optional but recommended */
-      vpImageConvert::convert(I, mat_img);
-      argv[0] = (char *)'predict_new.py';
-      argv[1] =  I;
-      Py_SetProgramName(argv[0]); 
-      Py_Initialize();
-      PySys_SetArgv(argc, argv);
-      file = fopen("predict_new.py","r");
-      PyRun_SimpleFile(file, "predict_new.py");
-
-      //PyRun_SimpleString("import sys");
-      //PyRun_SimpleString("print(1+2)");
-      Py_Finalize();
-      //	return 0;
+	//Py_SetProgramName(argv[0]);  /* optional but recommended */
+	Py_Initialize();
+	PyRun_SimpleString("import sys");
+	PyRun_SimpleString("print(1+2)");
+	Py_Finalize();
+//	return 0;
 
        // the two previous line should be be replace by something like
        // cdTc = CNN(I) ;                              // ------------------------------------------> 1 
