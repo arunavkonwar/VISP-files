@@ -90,7 +90,7 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   }
   
   
-//-----END of bytesToInt------------------------------------------------------------
+  //-----END of bytesToInt------------------------------------------------------------
   vector<float> bytesToFloatArray(unsigned char* b, unsigned length, unsigned arrayLength){
     typedef union {
       unsigned char b[4];
@@ -136,11 +136,11 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   //cout << "Original image size = " << image.cols << "/" << image.rows << endl;
   int *testList ;
   testList = new int[image.getRows()*image.getCols()];
-  for(int i = 0 ; i < image.getCols() ; i++){
+  for(int i = 0 ; i < image.cols ; i++){
     //cout << "i = " << i << "/" << image.cols << endl;
-    for(int j = 0 ; j < image.getRows() ; j++){
+    for(int j = 0 ; j < image.rows ; j++){
     //cout << "j = " << j << "/" << image.rows << endl;
-    testList[i*image.getRows() + j] = ((int)image[j][i]);
+    testList[i*image.rows + j] = ((int)image[j][i]));
     //testList[i*image.rows + j] = 255;
     }
   }
@@ -243,7 +243,6 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   for (int i=0 ; i <6 ; i++) r[i] = result[i] ;
   
   // Return this pose estimate
-  cout<<"bitchezz";
   return r;
 }
 //-----------------End of getDirectionfromCNN------------------------------------------
