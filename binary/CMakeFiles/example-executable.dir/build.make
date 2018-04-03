@@ -100,7 +100,7 @@ example-executable: /usr/local/lib/libvisp_imgproc.so.3.1.0
 example-executable: /usr/local/lib/libvisp_gui.so.3.1.0
 example-executable: /usr/local/lib/libvisp_detection.so.3.1.0
 example-executable: /usr/local/lib/libvisp_ar.so.3.1.0
-example-executable: /usr/lib/x86_64-linux-gnu/libpython2.7.so
+example-executable: /usr/lib/x86_64-linux-gnu/libpython3.5m.so
 example-executable: /usr/local/lib/libvisp_sensor.so.3.1.0
 example-executable: /usr/lib/x86_64-linux-gnu/libdc1394.so
 example-executable: /usr/lib/x86_64-linux-gnu/libSM.so

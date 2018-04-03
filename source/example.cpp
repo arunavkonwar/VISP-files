@@ -171,7 +171,6 @@ int main()
   cout << K << endl ;
 
 /*
-
   // On positionne une camera c1 à la position c1Tw (ici le repere repère Rw est 2m devant Rc1 
   //We position a camera c1 at position c1Tw (here the reference mark Rw is 2m in front of Rc1
   vpHomogeneousMatrix  c1Tw(0,0,2.5,  vpMath::rad(0),vpMath::rad(0),0) ;
@@ -247,33 +246,7 @@ int main()
        vpHomogeneousMatrix cdTc ;
        cdTc = cdTw*cTw.inverse() ;   // ----------------------------------------------------------cdTc here will be replaced by the one at (1) below. cdTc = CNN(I)
 
-		
-	
-	// Python embedder
-	//Py_SetProgramName(argv[0]);  /* optional but recommended */
-/*
-	Py_Initialize();
-	PyObject *obj = Py_BuildValue("s", "test.py");
- 	FILE *file = _Py_fopen_obj(obj, "r+");
-	if(file != NULL) {
-		PyRun_SimpleFile(file, "test.py");
-	}
-
-*/
-
-      //Py_SetProgramName(argv[0]);  /* optional but recommended */
-      vpImageConvert::convert(I, mat_img);
-      argv[0] = (char *)'predict_new.py';
-      argv[1] =  I;
-      Py_SetProgramName(argv[0]); 
-      Py_Initialize();
-      PySys_SetArgv(argc, argv);
-      file = fopen("predict_new.py","r");
-      PyRun_SimpleFile(file, "predict_new.py");
-
-      //PyRun_SimpleString("import sys");
-      //PyRun_SimpleString("print(1+2)");
-      Py_Finalize();
+     
       //	return 0;
 
        // the two previous line should be be replace by something like
@@ -319,8 +292,6 @@ int main()
 
 
    /*
-
-
     long k=0;
   // On positionne une camera c2 à la position c2Tw //Positioning a camera c2 at position c2Tw
   for(float i=-0.2;i<=0.2;i=i+0.01){
@@ -337,10 +308,8 @@ int main()
         
         float io=floorf(i * 100) / 100;
         float jo=floorf(j * 100) / 100;
-
         //float io=(float)(((int)(i*10))/10.0);;
         //float jo=(float)(((int)(j*10))/10.0);
-
         string loli = to_string(io);
         string lolj = to_string(jo);  
         //cout<<fixed;
@@ -353,7 +322,6 @@ int main()
         vpPoseVector deltaT(c2Tc1) ; //  vector 6 (t,theta U)
         //cout << vpPoseVector << endl;
         cout<<c2Tc1[0];
-
         ofstream outfile;
         outfile.open("data.txt", ios_base::app);
         //outfile << loli+" "+lolj<<endl;
@@ -362,25 +330,20 @@ int main()
         clock_t end = clock();
         double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
         cout<<elapsed_secs<<endl;
-
     }  
   }
   */
  
  /*
-
   // On affiche l'image I1 //We display image I1
   vpDisplayX d1(I1,10,10,"I1") ;
   vpDisplay::display(I1) ;
   vpDisplay::flush(I1) ;
-
   
-
   // On affiche l'image I2 //We display image I2
   vpDisplayX d2(I2,10,400,"I2") ;
   vpDisplay::display(I2) ;
   vpDisplay::flush(I2) ;
-
   */
 
 
@@ -392,13 +355,10 @@ int main()
   //vpImageIo::write(I2,"I2.pgm") ;
 
 /*
-
   vpDisplay::getClick(I2) ;
   cout << "OK " << endl ;
-
   vpDisplay::close(I2) ;
   vpDisplay::close(I1) ;
-
  */ 
 
 

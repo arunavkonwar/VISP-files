@@ -13,7 +13,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/usr/local/include"
   "/usr/include/opencv"
   "/usr/include/eigen3"
-  "/usr/include/python2.7"
+  "/usr/include/python3.5m"
   )
 
 # Targets to which this target links.
