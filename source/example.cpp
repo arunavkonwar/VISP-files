@@ -72,10 +72,6 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
           Lx[i+3][j+3] = Lw[i][j] ;
       }
     }    
-
-
-
-
 }
 
 
@@ -126,7 +122,7 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   int choice=1;
   int bufSize = 30;
 
-  //printf("==== Starting Client process ====");
+  printf("==== Starting Client process ====");
 
   unsigned char *bufInt;
   int result = 0;
@@ -428,6 +424,7 @@ int main()
     // the two previous line should be be replace by something like
     vpPoseVector cdrc ;
     cdrc = getDirectionFromCNN(I) ;                              // ------------------------------------------> 1 
+    
     cdTc.buildFrom(cdrc) ;
 
     // Calcul de l'erreur
