@@ -128,18 +128,21 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   int result = 0;
 
 
-
+  cout<<sizeof(int);
   //cout << "Original image size = " << image.cols << "/" << image.rows << endl;
   int *testList ;
   testList = new int[image.getRows()*image.getCols()];
   for(int i = 0 ; i < image.getCols() ; i++){
-    //cout << "i = " << i << "/" << image.cols << endl;
+    //cout << "i = " << i << "/" << image.getCols() << endl;
     for(int j = 0 ; j < image.getRows() ; j++){
-    //cout << "j = " << j << "/" << image.rows << endl;
-    testList[i*image.getRows() + j] = ((int)image[j][i]);
-    //testList[i*image.rows + j] = 255;
+      //cout << "j = " << j << "/" << image.getRows() << endl;
+      //testList[i*image.getRows() + j] = ((int)image[j][i]);
+      testList[i*image.getRows() + j] = ((int)image[j][i]);
+      //testList[i*image.getRows() + j] = 255;
+      //cout<<(int)image[j][i];
     }
   }
+
 
 
   // Sending array size then array bulk
@@ -151,8 +154,9 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   exit(-1);
   }
   int arraySize = (sizeof(testList)/sizeof(*testList));
-  write(fifo_server, &arraySize,sizeof(int)); // We write an int array
-  write(fifo_server,testList,arraySize*sizeof(int)); // We write an int array
+  //write(fifo_server, &arraySize,sizeof(int)); // We write an int array
+  //write(fifo_server,testList,arraySize*sizeof(int)); // We write an int array
+  write(fifo_server,testList,sizeof(testList));
   close(fifo_server);
 
 
@@ -233,13 +237,28 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
 //Mat input;
 //  vpImageConvert::convert(IErreur, input);
  // vpImageConvert::convert(I, input);
+
+  /*
+    for(int i = 0 ; i < I.getCols() ; i++){
+    //cout << "i = " << i << "/" << image.getCols() << endl;
+    for(int j = 0 ; j < I.getRows() ; j++){
+      //cout << "j = " << j << "/" << image.getRows() << endl;
+      //testList[i*image.getRows() + j] = ((int)image[j][i]);
+      testList[i*I.getRows() + j] = ((int)image[j][i]);
+      //testList[i*image.rows + j] = 255;
+      cout<<image[j][i];
+    }
+  }
+
+  */
+
+
   result = queryServer(I);
   
   vpPoseVector r ;
   for (int i=0 ; i <6 ; i++) r[i] = result[i] ;
   
   // Return this pose estimate
-  cout<<"bitchezz";
   return r;
 }
 //-----------------End of getDirectionfromCNN------------------------------------------
