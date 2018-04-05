@@ -135,14 +135,18 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
 
     for(int j = 0 ; j < image.getRows() ; j++){
 
-      testList[i*image.getRows() + j] = ((int)image[j][i]);
-      //testList[i*image.getRows() + j] = 255;
-      cout<<testList[i*image.getRows() + j]<<"   :";
+      //testList[i*image.getRows() + j] = ((int)image[j][i]);
+      testList[i*image.getRows() + j] = 255;
+      //cout<<testList[i*image.getRows() + j]<<"   :";
       
     }
   }
   
   // ----------------WRITE it to the file------------------------------------
+  // ----------delete previous content before writing-------------
+  ofstream ofs;
+  ofs.open("data1.txt", std::ofstream::out | std::ofstream::trunc);
+  ofs.close();
   
   ofstream outfile;
   outfile.open("data1.txt", ios_base::app);
@@ -167,33 +171,23 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   //fifo_server=open("/dev/shm/fifo_server",O_WRONLY);
   int fd, retval;
   //char buffer[8] = "test";
+  if(fifo_server < 0) {
+  printf("Error in opening write file");
+  exit(-1);
+  }
   retval = mkfifo("/dev/shm/fifo_server", 0666);
   fd = open("/dev/shm/fifo_server", O_WRONLY);
   //write(fd, buffer, sizeof(buffer));
   write(fd, testList, 100352);
   close(fd);
-  if(fifo_server < 0) {
-  printf("Error in opening file");
-  exit(-1);
-  }
-  int arraySize = (sizeof(testList)/sizeof(*testList));
-  //write(fifo_server, &arraySize,sizeof(int)); // We write an int array
-  //write(fifo_server,testList,arraySize*sizeof(int)); // We write an int array
-  close(fifo_server);
+  printf("\nworks till after sending data");
 
 
-  //fifo_client=open("/dev/shm/fifo",O_RDWR);
-  fifo_client=open("/dev/shm/fifo_client",O_RDWR);
-  if(fifo_client < 0) {
-  printf("Error in opening file");
-  exit(-1);
-  }
 
-
-  // Receiving array size  
+  // ----------------RECEIVE ARRAY SIZE-----------------------------------------------------  
   //unsigned char *bufInt;
+  /*
   bufInt=(unsigned char*)malloc(1*sizeof(int));
-  //printf("Size of int = %d", sizeof(int));
 
   read (fifo_client,bufInt,1*sizeof(int));
   
@@ -209,32 +203,53 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   vector<float> resultArray = bytesToFloatArray(bufArray, 4, result);
   close(fifo_client);
 
-  //cout << "Descriptor Received = " << resultArray[0] << "/" << resultArray[1] << "/" << resultArray[2] << "/" << resultArray[3] << "/" << resultArray[4] << "/" << resultArray[5] << endl;
-  //cout << "Descriptor Received 2 = " << resultArray[0] << "/" << resultArray[1] << "/" << resultArray[2] << "/" << resultArray[3] << "/" << resultArray[4] << "/" << resultArray[5] << endl;
-  //for(int i = 0 ; i < result ; i++){
-  //  cout << "desc[" << i << "] = " << resultArray[i] << endl;
-  //}
+  
+  int fd2, retval2;
+  //fifo_client=open("/dev/shm/fifo",O_RDWR);
+  fifo_client=open("/dev/shm/fifo_client",O_RDWR);
+  if(fifo_client < 0) {
+  printf("Error in opening file");
+  exit(-1);
+  }
+  printf("\nwaiting to receive predictions");
 
-  /*cout << "Sending com time = " << elapsedSend*1000 << "ms" << endl;
-  cout << "Receiving com time = " << elapsedReceive*1000 << "ms" << endl;
-  cout << "Debug time (int read) = " << elapsedDebug*1000 << "ms" << endl;
-  cout << "Debug2 time (array read) = " << elapsedDebug2*1000 << "ms" << endl;
-  cout << "Debug3 time (opening pipe) = " << elapsedDebug3*1000 << "ms" << endl;*/
+  
+  //int fd2, retval2;
 
-  //cout << "Vector result = " << endl;
+  unsigned char *bufArray;
+  bufArray = (unsigned char*)malloc(result*sizeof(float));
+  
+  fd2 = open("/dev/shm/fifo_server",O_RDONLY);
+  //retval = read(fd, buffer, sizeof(buffer));
+  read(fd2, bufArray, result*sizeof(float));
+  vector<float> resultArray = bytesToFloatArray(bufArray, 6, result);
+  fflush(stdin);
+  cout<<"received data";
+  */
   vector<double> resultVector(6);
+
+  ifstream inFile;
+  float x;
+  inFile.open("/home/arunav/main-code/arunav/ultimate_code/result.txt");
+  if (!inFile) {
+    cout << "\nUnable to open READ file\n";
+    exit(1); // terminate with error
+  }
+  int i=0;
+  while (inFile >> x) {
+        resultVector[i]=x;
+        i++;
+    }
+
+  /*
   for(int i = 0 ; i < 6 ; i++){
-  if(i < 3){
-    resultVector[i] = resultArray[i]/1000; // Scaling from [mm] to [m]
-  }
-  else{
     resultVector[i] = resultArray[i]; 
-  }
   //cout << "====" << endl;
   //cout <<  resultArray[i] << endl;
   //cout <<  resultVector[i] << endl;
   }
-  //cout << "DescriptorVector Received  = " << resultVector[0] << "/" << resultVector[1] << "/" << resultVector[2] << "/" << resultVector[3] << "/" << resultVector[4] << "/" << resultVector[5] << endl;
+  */
+  cout << "DescriptorVector Received  = " << resultVector[0] << "/" << resultVector[1] << "/" << resultVector[2] << "/" << resultVector[3] << "/" << resultVector[4] << "/" << resultVector[5] << endl;
   
   delete [] testList ; //?? EM
 
@@ -247,33 +262,6 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   vpPoseVector getDirectionFromCNN(vpImage<unsigned char> &I){
 
   vector<double> result(6);
-/*  vpImage<unsigned char> IErreur;
-  IErreur.resize(im.getHeight(),im.getWidth());
-
-  // Compute the difference image
-  for(unsigned int j=0;j<IErreur.getWidth();j++)
-    for(unsigned int  i=0;i<IErreur.getHeight();i++)
-      IErreur[i][j]=128+(int)((int)im[i][j]-(int)desiredImage[i][j])/2;
-*/
-  // Convert it into 'Mat'
-//Mat input;
-//  vpImageConvert::convert(IErreur, input);
- // vpImageConvert::convert(I, input);
-
-  /*
-    for(int i = 0 ; i < I.getCols() ; i++){
-    //cout << "i = " << i << "/" << image.getCols() << endl;
-    for(int j = 0 ; j < I.getRows() ; j++){
-      //cout << "j = " << j << "/" << image.getRows() << endl;
-      //testList[i*image.getRows() + j] = ((int)image[j][i]);
-      testList[i*I.getRows() + j] = ((int)image[j][i]);
-      //testList[i*image.rows + j] = 255;
-      cout<<image[j][i];
-    }
-  }
-
-  */
-
 
   result = queryServer(I);
   
