@@ -127,28 +127,51 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   unsigned char *bufInt;
   int result = 0;
 
-
-  cout<<sizeof(int);
   //cout << "Original image size = " << image.cols << "/" << image.rows << endl;
   int *testList ;
+ 
   testList = new int[image.getRows()*image.getCols()];
   for(int i = 0 ; i < image.getCols() ; i++){
-    //cout << "i = " << i << "/" << image.getCols() << endl;
+
     for(int j = 0 ; j < image.getRows() ; j++){
-      //cout << "j = " << j << "/" << image.getRows() << endl;
-      //testList[i*image.getRows() + j] = ((int)image[j][i]);
+
       testList[i*image.getRows() + j] = ((int)image[j][i]);
       //testList[i*image.getRows() + j] = 255;
-      //cout<<(int)image[j][i];
+      cout<<testList[i*image.getRows() + j]<<"   :";
+      
     }
   }
+  
+  // ----------------WRITE it to the file------------------------------------
+  
+  ofstream outfile;
+  outfile.open("data1.txt", ios_base::app);
+  
+  
+  for(int i = 0 ; i < image.getCols() ; i++){
 
+    for(int j = 0 ; j < image.getRows() ; j++){
 
+      //testList[i*image.getRows() + j] = ((int)image[j][i]);
+      //testList[i*image.getRows() + j] = 255;
+      outfile<<testList[i*image.getRows() + j]<<endl;
+      
+    }
+  }
+  
+//-----------------------WRITE to file ends here------------------
 
   // Sending array size then array bulk
   //fifo_server=open("/dev/shm/fifo",O_RDWR);
-  fifo_server=open("/dev/shm/fifo_server",O_RDWR);
+  //fifo_server=open("/dev/shm/fifo_server",O_RDWR);
   //fifo_server=open("/dev/shm/fifo_server",O_WRONLY);
+  int fd, retval;
+  //char buffer[8] = "test";
+  retval = mkfifo("/dev/shm/fifo_server", 0666);
+  fd = open("/dev/shm/fifo_server", O_WRONLY);
+  //write(fd, buffer, sizeof(buffer));
+  write(fd, testList, 100352);
+  close(fd);
   if(fifo_server < 0) {
   printf("Error in opening file");
   exit(-1);
@@ -156,7 +179,6 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   int arraySize = (sizeof(testList)/sizeof(*testList));
   //write(fifo_server, &arraySize,sizeof(int)); // We write an int array
   //write(fifo_server,testList,arraySize*sizeof(int)); // We write an int array
-  write(fifo_server,testList,sizeof(testList));
   close(fifo_server);
 
 
@@ -357,9 +379,10 @@ int main()
   vpMatrix K = cam.get_K() ;
 
   //Matrix of intrinsic parameters 
-
+  cout << Iimage.getRows()*Iimage.getCols();
   cout << "Matrice des paramètres intrinsèques" << endl ;
   cout << K << endl ;
+
 
   /*
   // On positionne une camera c1 à la position c1Tw (ici le repere repère Rw est 2m devant Rc1 
