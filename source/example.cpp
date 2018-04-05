@@ -33,6 +33,10 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+//for time delay
+#include <chrono>
+#include <thread>
+
 
 using namespace std ;
 
@@ -74,7 +78,7 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
     }    
 }
 
-
+/*
  int bytesToInt(unsigned char* b, unsigned length){
   int val = 0;
   int j = 0;
@@ -84,9 +88,11 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
     }
     return val;
   }
-  
+  */
   
 //-----END of bytesToInt------------------------------------------------------------
+
+/*
   vector<float> bytesToFloatArray(unsigned char* b, unsigned length, unsigned arrayLength){
     typedef union {
       unsigned char b[4];
@@ -107,6 +113,8 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
     }
     return val;
   }
+
+  */
     
   //--------End of bytesToFloatArray----------------------------------------------------------------------------------
   
@@ -164,6 +172,9 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   }
   
 //-----------------------WRITE to file ends here------------------
+  using namespace std::this_thread; // sleep_for, sleep_until
+    using namespace std::chrono;
+  sleep_for(nanoseconds(10000));
 
   // Sending array size then array bulk
   //fifo_server=open("/dev/shm/fifo",O_RDWR);
@@ -185,47 +196,7 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
 
 
   // ----------------RECEIVE ARRAY SIZE-----------------------------------------------------  
-  //unsigned char *bufInt;
-  /*
-  bufInt=(unsigned char*)malloc(1*sizeof(int));
-
-  read (fifo_client,bufInt,1*sizeof(int));
   
-  result = bytesToInt(bufInt,4);
-  //printf("\n *** Reply size from server is '%d' ***\n",result);
-
-  // Receiving FLOAT array
-  unsigned char *bufArray;
-  bufArray = (unsigned char*)malloc(result*sizeof(float));
-
-  read (fifo_client,bufArray,result*sizeof(float));
-
-  vector<float> resultArray = bytesToFloatArray(bufArray, 4, result);
-  close(fifo_client);
-
-  
-  int fd2, retval2;
-  //fifo_client=open("/dev/shm/fifo",O_RDWR);
-  fifo_client=open("/dev/shm/fifo_client",O_RDWR);
-  if(fifo_client < 0) {
-  printf("Error in opening file");
-  exit(-1);
-  }
-  printf("\nwaiting to receive predictions");
-
-  
-  //int fd2, retval2;
-
-  unsigned char *bufArray;
-  bufArray = (unsigned char*)malloc(result*sizeof(float));
-  
-  fd2 = open("/dev/shm/fifo_server",O_RDONLY);
-  //retval = read(fd, buffer, sizeof(buffer));
-  read(fd2, bufArray, result*sizeof(float));
-  vector<float> resultArray = bytesToFloatArray(bufArray, 6, result);
-  fflush(stdin);
-  cout<<"received data";
-  */
   vector<double> resultVector(6);
 
   ifstream inFile;
@@ -241,15 +212,8 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
         i++;
     }
 
-  /*
-  for(int i = 0 ; i < 6 ; i++){
-    resultVector[i] = resultArray[i]; 
-  //cout << "====" << endl;
-  //cout <<  resultArray[i] << endl;
-  //cout <<  resultVector[i] << endl;
-  }
-  */
-  cout << "DescriptorVector Received  = " << resultVector[0] << "/" << resultVector[1] << "/" << resultVector[2] << "/" << resultVector[3] << "/" << resultVector[4] << "/" << resultVector[5] << endl;
+
+  cout << "DescriptorVector Received  = " << resultVector[0] << " " << resultVector[1] << " " << resultVector[2] << " " << resultVector[3] << " " << resultVector[4] << " " << resultVector[5] << endl;
   
   delete [] testList ; //?? EM
 
@@ -264,6 +228,9 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
   vector<double> result(6);
 
   result = queryServer(I);
+
+  cout<<"from getDirectionfromCNN function"<<endl;
+  for (int i=0 ; i <6 ; i++) cout<<" "<<result[i] ;
   
   vpPoseVector r ;
   for (int i=0 ; i <6 ; i++) r[i] = result[i] ;

@@ -53,6 +53,10 @@ opencv2/highgui/highgui.hpp
 -
 opencv2/imgproc/imgproc.hpp
 -
+chrono
+-
+thread
+-
 
 /usr/include/opencv/cv.h
 opencv2/core/core_c.h
