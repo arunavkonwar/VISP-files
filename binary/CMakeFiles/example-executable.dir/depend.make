@@ -12,7 +12,6 @@ CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp/vpImage
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp/vpImageSimulator.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpArray2D.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpCameraParameters.h
-CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpCircle.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpColVector.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpColor.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpConfig.h
@@ -20,7 +19,6 @@ CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/v
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpDisplay.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpDisplayException.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpException.h
-CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpExponentialMap.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpForceTwistMatrix.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpForwardProjection.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpHomogeneousMatrix.h
@@ -28,10 +26,8 @@ CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/v
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpImageConvert.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpImageException.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpImagePoint.h
-CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpImageTools.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpMath.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpMatrix.h
-CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpMeterPixelConversion.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpMouseButton.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpPoint.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/core/vpPoseVector.h
@@ -58,9 +54,6 @@ CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/gui/vp
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/gui/vpDisplayWin32.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/gui/vpDisplayX.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/gui/vpGDIRenderer.h
-CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/gui/vpPlot.h
-CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/gui/vpPlotCurve.h
-CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/gui/vpPlotGraph.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/gui/vpWin32Renderer.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/gui/vpWin32Window.h
 CMakeFiles/example-executable.dir/example.cpp.o: /usr/local/include/visp3/io/vpImageIo.h
