@@ -123,14 +123,14 @@ int main()
         k++;
         string lolk = to_string(k);
         //vpImageIo::write(I2,k+".jpg") ; //write to filename
-        vpImageIo::write(I2,"generated_images/"+lolk + ".jpg");
+        vpImageIo::write(I2,"generated_images_8k/"+lolk + ".jpg");
         vpHomogeneousMatrix  c2Tc1 = c2Tw * c1Tw.inverse() ;
         vpPoseVector deltaT(c2Tc1) ; //  vector 6 (t,theta U)
         //cout << vpPoseVector << endl;
         cout<<c2Tc1[0];
 
         ofstream outfile;
-        outfile.open("data.txt", ios_base::app);
+        outfile.open("data_8k.txt", ios_base::app);
         //outfile << loli+" "+lolj<<endl;
         outfile << deltaT.t() << endl;
         //cout << deltaT.t() << endl ;
