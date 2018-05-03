@@ -83,7 +83,6 @@ int main()
   cout << K << endl ;
 
 /*
-
   // On positionne une camera c1 à la position c1Tw (ici le repere repère Rw est 2m devant Rc1 
   //We position a camera c1 at position c1Tw (here the reference mark Rw is 2m in front of Rc1
   vpHomogeneousMatrix  c1Tw(0,0,2.5,  vpMath::rad(0),vpMath::rad(0),0) ;
@@ -99,63 +98,64 @@ int main()
     long k=0;
   // On positionne une camera c2 à la position c2Tw //Positioning a camera c2 at position c2Tw
   for(float i=-0.2;i<=0.2;i=i+0.01){
-    for(float j=-0.1;j<=0.1;j=j+0.001){
-      vpHomogeneousMatrix c2Tw(i,j,1,
-        vpMath::rad(0),vpMath::rad(0),0) ; //0.1,0,2, vpMath::rad(0),vpMath::rad(0),0) ;
-        //on simule l'image vue par c2 //we simulate the image seen by c2
-        sim.setCameraPosition(c2Tw);
-        sim.setCleanPreviousImage(true, vpColor::black); //set color, default is black
-        // on recupère l'image I2 //we recover the image I2
-        sim.getImage(I2,cam);
-        cout << "Image I1d " <<endl ;
-        cout << c2Tw << endl ;
-        
-        float io=floorf(i * 100) / 100;
-        float jo=floorf(j * 100) / 100;
+    for(float j=-0.10;j<=0.10;j=j+0.01){
+    	for(float l=1;l<=2;l=l+0.1){
+	      	vpHomogeneousMatrix c2Tw(i,j,l,
+		vpMath::rad(0),vpMath::rad(0),0) ; //0.1,0,2, vpMath::rad(0),vpMath::rad(0),0) ;
+		//on simule l'image vue par c2 //we simulate the image seen by c2
+		sim.setCameraPosition(c2Tw);
+		sim.setCleanPreviousImage(true, vpColor::black); //set color, default is black
+		// on recupère l'image I2 //we recover the image I2
+		sim.getImage(I2,cam);
+		cout << "Image I1d " <<endl ;
+		cout << c2Tw << endl ;
+		
+		float io=floorf(i * 100) / 100;
+		float jo=floorf(j * 100) / 100;
 
-        //float io=(float)(((int)(i*10))/10.0);;
-        //float jo=(float)(((int)(j*10))/10.0);
+		//float io=(float)(((int)(i*10))/10.0);;
+		//float jo=(float)(((int)(j*10))/10.0);
 
-        string loli = to_string(io);
-        string lolj = to_string(jo);  
-        //cout<<fixed;
-        //cout<<setprecision(2);
-        k++;
-        string lolk = to_string(k);
-        //vpImageIo::write(I2,k+".jpg") ; //write to filename
-        vpImageIo::write(I2,"generated_images_8k/"+lolk + ".jpg");
-        vpHomogeneousMatrix  c2Tc1 = c2Tw * c1Tw.inverse() ;
-        vpPoseVector deltaT(c2Tc1) ; //  vector 6 (t,theta U)
-        //cout << vpPoseVector << endl;
-        cout<<c2Tc1[0];
+		string loli = to_string(io);
+		string lolj = to_string(jo);  
+		//cout<<fixed;
+		//cout<<setprecision(2);
+		k++;
+		string lolk = to_string(k);
+		//vpImageIo::write(I2,k+".jpg") ; //write to filename
+		vpImageIo::write(I2,"validation_images_3axis/"+lolk + ".jpg");
+		vpHomogeneousMatrix  c1Tc2 = c1Tw * c2Tw.inverse() ;
+		//vpPoseVector deltaT(c2Tc1) ; //  vector 6 (t,theta U)
 
-        ofstream outfile;
-        outfile.open("data_8k.txt", ios_base::app);
-        //outfile << loli+" "+lolj<<endl;
-        outfile << deltaT.t() << endl;
-        //cout << deltaT.t() << endl ;
-        clock_t end = clock();
-        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-        cout<<elapsed_secs<<endl;
+				vpPoseVector deltaT(c1Tc2) ; //  vector 6 (t,theta U)
+		//cout << vpPoseVector << endl;
+		//cout<<c2Tc1[0];
 
+// c1 <-- cd
+// c2 <-- c
+		ofstream outfile;
+		outfile.open("validation_data_3axis.txt", ios_base::app);
+		//outfile << loli+" "+lolj<<endl;
+		outfile << deltaT.t() << endl;
+		//cout << deltaT.t() << endl ;
+		clock_t end = clock();
+		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+		cout<<elapsed_secs<<endl;
+	}
     }  
   }
   
  
  /*
-
   // On affiche l'image I1 //We display image I1
   vpDisplayX d1(I1,10,10,"I1") ;
   vpDisplay::display(I1) ;
   vpDisplay::flush(I1) ;
-
   
-
   // On affiche l'image I2 //We display image I2
   vpDisplayX d2(I2,10,400,"I2") ;
   vpDisplay::display(I2) ;
   vpDisplay::flush(I2) ;
-
   */
 
 
@@ -167,13 +167,10 @@ int main()
   //vpImageIo::write(I2,"I2.pgm") ;
 
 /*
-
   vpDisplay::getClick(I2) ;
   cout << "OK " << endl ;
-
   vpDisplay::close(I2) ;
   vpDisplay::close(I1) ;
-
  */ 
 
 

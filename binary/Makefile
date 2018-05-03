@@ -123,32 +123,32 @@ example-executable/fast:
 	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/build
 .PHONY : example-executable/fast
 
-example.o: example.cpp.o
+generate-images.o: generate-images.cpp.o
 
-.PHONY : example.o
+.PHONY : generate-images.o
 
 # target to build an object file
-example.cpp.o:
-	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/example.cpp.o
-.PHONY : example.cpp.o
+generate-images.cpp.o:
+	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/generate-images.cpp.o
+.PHONY : generate-images.cpp.o
 
-example.i: example.cpp.i
+generate-images.i: generate-images.cpp.i
 
-.PHONY : example.i
+.PHONY : generate-images.i
 
 # target to preprocess a source file
-example.cpp.i:
-	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/example.cpp.i
-.PHONY : example.cpp.i
+generate-images.cpp.i:
+	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/generate-images.cpp.i
+.PHONY : generate-images.cpp.i
 
-example.s: example.cpp.s
+generate-images.s: generate-images.cpp.s
 
-.PHONY : example.s
+.PHONY : generate-images.s
 
 # target to generate assembly for a file
-example.cpp.s:
-	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/example.cpp.s
-.PHONY : example.cpp.s
+generate-images.cpp.s:
+	$(MAKE) -f CMakeFiles/example-executable.dir/build.make CMakeFiles/example-executable.dir/generate-images.cpp.s
+.PHONY : generate-images.cpp.s
 
 # Help Target
 help:
@@ -159,9 +159,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... example-executable"
 	@echo "... rebuild_cache"
-	@echo "... example.o"
-	@echo "... example.i"
-	@echo "... example.s"
+	@echo "... generate-images.o"
+	@echo "... generate-images.i"
+	@echo "... generate-images.s"
 .PHONY : help
 
 
