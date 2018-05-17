@@ -93,56 +93,54 @@ int main()
   cout << "Image I1g " <<endl ;
   cout << c1Tw << endl ;
 */
-   vpHomogeneousMatrix c1Tw(0,0,1,
+   vpHomogeneousMatrix cdTw(0,0,1,
         vpMath::rad(0),vpMath::rad(0),0) ; //0.1,0,2, vpMath::rad(0),vpMath::rad(0),0) ;
     long k=0;
   // On positionne une camera c2 à la position c2Tw //Positioning a camera c2 at position c2Tw
-  for(float i=-0.01;i<=0.01;i=i+0.001){
-    for(float j=-0.01;j<=0.01;j=j+0.005){
-    	for(float l=0.9;l<=1.1;l=l+0.03){
-    		for(int m=-45;m<=45;m=m+10){
-		      	vpHomogeneousMatrix c2Tw(i,j,l,
-			vpMath::rad(0),vpMath::rad(0),vpMath::rad(m)) ; //0.1,0,2, vpMath::rad(0),vpMath::rad(0),0) ;
-			//on simule l'image vue par c2 //we simulate the image seen by c2
-			sim.setCameraPosition(c2Tw);
-			sim.setCleanPreviousImage(true, vpColor::black); //set color, default is black
-			// on recupère l'image I2 //we recover the image I2
-			sim.getImage(I2,cam);
-			cout << "Image I1d " <<endl ;
-			cout << c2Tw << endl ;
+  for(float i=-0.2;i<=0.2;i=i+0.01){
+    for(float j=-0.10;j<=0.10;j=j+0.01){
+    	for(float l=1;l<=2;l=l+0.1){
+	      	vpHomogeneousMatrix cTw(i,j,l,
+		vpMath::rad(0),vpMath::rad(0),0) ; //0.1,0,2, vpMath::rad(0),vpMath::rad(0),0) ;
+		//on simule l'image vue par c2 //we simulate the image seen by c2
+		sim.setCameraPosition(cTw);
+		sim.setCleanPreviousImage(true, vpColor::black); //set color, default is black
+		// on recupère l'image I2 //we recover the image I2
+		sim.getImage(I2,cam);
+		cout << "Image I1d " <<endl ;
+		cout << cTw << endl ;
 		
-			float io=floorf(i * 100) / 100;
-			float jo=floorf(j * 100) / 100;
+		float io=floorf(i * 100) / 100;
+		float jo=floorf(j * 100) / 100;
 
-			//float io=(float)(((int)(i*10))/10.0);;
-			//float jo=(float)(((int)(j*10))/10.0);
+		//float io=(float)(((int)(i*10))/10.0);;
+		//float jo=(float)(((int)(j*10))/10.0);
 
-			//string loli = to_string(io);
-			//string lolj = to_string(jo);  
-			//cout<<fixed;
-			//cout<<setprecision(2);
-			k++;
-			string lolk = to_string(k);
-			//vpImageIo::write(I2,k+".jpg") ; //write to filename
-			vpImageIo::write(I2,"generated_images_4DOF/"+lolk + ".jpg");
-			vpHomogeneousMatrix  c1Tc2 = c1Tw * c2Tw.inverse() ;
-			//vpPoseVector deltaT(c2Tc1) ; //  vector 6 (t,theta U)
+		//string loli = to_string(io);
+		//string lolj = to_string(jo);  
+		//cout<<fixed;
+		//cout<<setprecision(2);
+		k++;
+		string lolk = to_string(k);
+		//vpImageIo::write(I2,k+".jpg") ; //write to filename
+		vpImageIo::write(I2,"validation_images_3axis/"+lolk + ".jpg");
+		vpHomogeneousMatrix  cdTc = cdTw * cTw.inverse() ;
+		//vpPoseVector deltaT(c2Tc1) ; //  vector 6 (t,theta U)
 
-			vpPoseVector deltaT(c1Tc2) ; //  vector 6 (t,theta U)
-			//cout << vpPoseVector << endl;
-			//cout<<c2Tc1[0];
+				vpPoseVector deltaT(cdTc) ; //  vector 6 (t,theta U)
+		//cout << vpPoseVector << endl;
+		//cout<<c2Tc1[0];
 
-	// c1 <-- cd
-	// c2 <-- c
-			ofstream outfile;
-			outfile.open("data_4DOF.txt", ios_base::app);
-			//outfile << loli+" "+lolj<<endl;
-			outfile << deltaT.t() << endl;
-			//cout << deltaT.t() << endl ;
-			clock_t end = clock();
-			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-			cout<<elapsed_secs<<endl;
-		}
+// c1 <-- cd
+// c2 <-- c
+		ofstream outfile;
+		outfile.open("validation_data_3axis.txt", ios_base::app);
+		//outfile << loli+" "+lolj<<endl;
+		outfile << deltaT.t() << endl;
+		//cout << deltaT.t() << endl ;
+		clock_t end = clock();
+		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+		cout<<elapsed_secs<<endl;
 	}
     }  
   }
