@@ -57,6 +57,37 @@ computeInteractionMatrix3D(vpHomogeneousMatrix &cdTc,  vpMatrix &Lx)
 
 
 
+double generator() {
+  double temp1;
+  double temp2, temp3;
+  double result;
+  int p;
+  p = 1;
+  time_t t;
+  double PI=3.14;
+  
+  while( p > 0 ){
+    //srand (time(NULL));
+    temp2 = rand() / ( (double)RAND_MAX ); // rand() function generates an integer between 0 and  RAND_MAX, which is defined in stdlib.h.
+    //cout << "tmp2 = " << temp2 << endl;
+    if ( temp2 == 0 ){// temp2 is >= (RAND_MAX / 2)
+      p = 1;
+    }else{
+      p = -1;
+    }
+  }
+  temp1 = cos( ( 2.0 * (double)PI ) * rand() / ( (double)RAND_MAX ) );
+  result = sqrt( -2.0 * log( temp2 ) ) * temp1;
+  /*if( rand() / ( (double)RAND_MAX )  > 0.5){
+    result *= -1;
+    }*/
+  //cout << "resultRAND = " << result << endl;
+  return result;  // return the generated random sample to the caller
+
+}
+
+
+
 int main()
 {
   clock_t begin = clock();
@@ -143,74 +174,153 @@ int main()
    vpHomogeneousMatrix cdTw(0,0,1,
         vpMath::rad(0),vpMath::rad(0),0) ; //0.1,0,2, vpMath::rad(0),vpMath::rad(0),0) ;
     long k=0;
-  // On positionne une camera c2 à la position c2Tw //Positioning a camera c2 at position c2Tw
-  for(float i=-0.01;i<=0.01;i=i+0.001){
-    for(float j=-0.01;j<=0.01;j=j+0.003){
-    	for(float l=0.9;l<=1.1;l=l+0.08){
-    		for(int m=-20;m<=20;m=m+4){
-		      	vpHomogeneousMatrix cTw(i,j,l,
-			vpMath::rad(0),vpMath::rad(0),vpMath::rad(m)) ; //0.1,0,2, vpMath::rad(0),vpMath::rad(0),0) ;
-			//on simule l'image vue par c2 //we simulate the image seen by c2
-			sim.setCameraPosition(cTw);
-			sim.setCleanPreviousImage(true, vpColor::black); //set color, default is black
-			// on recupère l'image I2 //we recover the image I2
-			sim.getImage(I2,cam);
-			cout << "Image I1d " <<endl ;
-			cout << cTw << endl ;
-		
-			float io=floorf(i * 100) / 100;
-			float jo=floorf(j * 100) / 100;
+    
+    double currentRelativeTx, currentRelativeTy, currentRelativeTz, currentRelativeRx, currentRelativeRy, currentRelativeRz;
+    // p is for precision of the generated samples.
+    double p = 0.01;
+    
+	for(int damn=0;damn<400;damn++){	
+	
+	currentRelativeTx = p*generator();
+	currentRelativeTy = p*generator(); 
+	currentRelativeTz = p*generator(); 
+	currentRelativeRx = generator(); 
+	currentRelativeRy = generator(); 
+	currentRelativeRz = generator();
 
-			//float io=(float)(((int)(i*10))/10.0);;
-			//float jo=(float)(((int)(j*10))/10.0);
+	vpHomogeneousMatrix cTw(currentRelativeTx,currentRelativeTy,currentRelativeTz,
+	vpMath::rad(0),vpMath::rad(currentRelativeRy),vpMath::rad(currentRelativeRz)) ; //0.1,0,2, vpMath::rad(0),vpMath::rad(0),0) ;
+	//on simule l'image vue par c2 //we simulate the image seen by c2
+	sim.setCameraPosition(cTw);
+	sim.setCleanPreviousImage(true, vpColor::black); //set color, default is black
+	// on recupère l'image I2 //we recover the image I2
+	sim.getImage(I2,cam);
+	cout << "Image I1d " <<endl ;
+	cout << cTw << endl ;
 
-			//string loli = to_string(io);
-			//string lolj = to_string(jo);  
-			//cout<<fixed;
-			//cout<<setprecision(2);
-			k++;
-			string lolk = to_string(k);
-			//vpImageIo::write(I2,k+".jpg") ; //write to filename
-			vpImageIo::write(I2,"generated_images_4DOF_new/"+lolk + ".jpg");
-			vpHomogeneousMatrix  cdTc = cdTw * cTw.inverse() ;
-			//vpPoseVector deltaT(c2Tc1) ; //  vector 6 (t,theta U)
+	//float io=floorf(i * 100) / 100;
+	//float jo=floorf(j * 100) / 100;
 
-			//vpPoseVector deltaT(cdTc) ; //  vector 6 (t,theta U)
-			//cout << vpPoseVector << endl;
-			//cout<<c2Tc1[0];
+	//float io=(float)(((int)(i*10))/10.0);;
+	//float jo=(float)(((int)(j*10))/10.0);
 
-			//-----------------------------------------------
+	//string loli = to_string(io);
+	//string lolj = to_string(jo);  
+	//cout<<fixed;
+	//cout<<setprecision(2);
+	k++;
+	string lolk = to_string(k);
+	//vpImageIo::write(I2,k+".jpg") ; //write to filename
+	vpImageIo::write(I2,"generated_images_high_precision/"+lolk + ".jpg");
+	vpHomogeneousMatrix  cdTc = cdTw * cTw.inverse() ;
+	//vpPoseVector deltaT(c2Tc1) ; //  vector 6 (t,theta U)
 
-			vpPoseVector cdrc ;
-			cdrc.buildFrom(cdTc) ;			
+	//vpPoseVector deltaT(cdTc) ; //  vector 6 (t,theta U)
+	//cout << vpPoseVector << endl;
+	//cout<<c2Tc1[0];
 
-			computeError3D(cdTc, e) ;
-			// Calcul de la matrice d'interaction
-			computeInteractionMatrix3D(cdTc, Lx) ;
-			//        Calcul de la loi de commande
-			vpMatrix Lp ;
-			Lp = Lx.pseudoInverse() ;
+	//-----------------------------------------------
 
-			v = - lambda * Lp * e ;
+	vpPoseVector cdrc ;
+	cdrc.buildFrom(cdTc) ;			
 
-			//------------------------------------------------
+	computeError3D(cdTc, e) ;
+	// Calcul de la matrice d'interaction
+	computeInteractionMatrix3D(cdTc, Lx) ;
+	//        Calcul de la loi de commande
+	vpMatrix Lp ;
+	Lp = Lx.pseudoInverse() ;
+
+	v = - lambda * Lp * e ;
+
+	//------------------------------------------------
 
 	// c1 <-- cd
 	// c2 <-- vpColor
-			ofstream outfile;
-			outfile.open("data_4DOF_new.txt", ios_base::app);
-			//outfile << loli+" "+lolj<<endl;
-			//outfile << deltaT.t() << endl;
-			outfile << v.t() << endl;
-			//cout << deltaT.t() << endl ;
-			clock_t end = clock();
-			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-			cout<<elapsed_secs<<endl;
+	ofstream outfile;
+	outfile.open("data_high_precision.txt", ios_base::app);
+	//outfile << loli+" "+lolj<<endl;
+	//outfile << deltaT.t() << endl;
+	outfile << v.t() << endl;
+	//cout << deltaT.t() << endl ;
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+	cout<<elapsed_secs<<endl;
+}
+    
+   /* 
+  // On positionne une camera c2 à la position c2Tw //Positioning a camera c2 at position c2Tw
+  for(float i=-0.01;i<=0.01;i=i+0.001){
+    for(float j=-0.01;j<=0.01;j=j+0.001){
+    	for(float l=0.99;l<=1.01;l=l+0.001){
+    		for(int m=-1;m<=1;m=m+0.2){
+    			for(int n=-1;n<=1;n=n+0.2){
+    				for(int o=-1;o<=1;o=o+0.2){
+				      	vpHomogeneousMatrix cTw(i,j,l,
+					vpMath::rad(n),vpMath::rad(o),vpMath::rad(m)) ; //0.1,0,2, vpMath::rad(0),vpMath::rad(0),0) ;
+					//on simule l'image vue par c2 //we simulate the image seen by c2
+					sim.setCameraPosition(cTw);
+					sim.setCleanPreviousImage(true, vpColor::black); //set color, default is black
+					// on recupère l'image I2 //we recover the image I2
+					sim.getImage(I2,cam);
+					cout << "Image I1d " <<endl ;
+					cout << cTw << endl ;
+		
+					float io=floorf(i * 100) / 100;
+					float jo=floorf(j * 100) / 100;
+
+					//float io=(float)(((int)(i*10))/10.0);;
+					//float jo=(float)(((int)(j*10))/10.0);
+
+					//string loli = to_string(io);
+					//string lolj = to_string(jo);  
+					//cout<<fixed;
+					//cout<<setprecision(2);
+					k++;
+					string lolk = to_string(k);
+					//vpImageIo::write(I2,k+".jpg") ; //write to filename
+					vpImageIo::write(I2,"generated_images_high_preision/"+lolk + ".jpg");
+					vpHomogeneousMatrix  cdTc = cdTw * cTw.inverse() ;
+					//vpPoseVector deltaT(c2Tc1) ; //  vector 6 (t,theta U)
+
+					//vpPoseVector deltaT(cdTc) ; //  vector 6 (t,theta U)
+					//cout << vpPoseVector << endl;
+					//cout<<c2Tc1[0];
+
+					//-----------------------------------------------
+
+					vpPoseVector cdrc ;
+					cdrc.buildFrom(cdTc) ;			
+
+					computeError3D(cdTc, e) ;
+					// Calcul de la matrice d'interaction
+					computeInteractionMatrix3D(cdTc, Lx) ;
+					//        Calcul de la loi de commande
+					vpMatrix Lp ;
+					Lp = Lx.pseudoInverse() ;
+
+					v = - lambda * Lp * e ;
+
+					//------------------------------------------------
+
+			// c1 <-- cd
+			// c2 <-- vpColor
+					ofstream outfile;
+					outfile.open("data_high_precision.txt", ios_base::app);
+					//outfile << loli+" "+lolj<<endl;
+					//outfile << deltaT.t() << endl;
+					outfile << v.t() << endl;
+					//cout << deltaT.t() << endl ;
+					clock_t end = clock();
+					double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+					cout<<elapsed_secs<<endl;
+				}
+			}
 		}
 		}
     }  
   }
-  
+  */
  
  /*
   // On affiche l'image I1 //We display image I1
